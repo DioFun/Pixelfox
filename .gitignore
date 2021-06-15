@@ -107,4 +107,4 @@ dist
 Lavalink.jar 
 lavalink.sh
 application.yml
-settings/
+settings/config.js

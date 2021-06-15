@@ -102,3 +102,8 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Other
+Lavalink.jar 
+lavalink.sh
+application.yml

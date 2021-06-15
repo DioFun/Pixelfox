@@ -5,5 +5,3 @@ module.exports = {
     LAVALINK_PASSWORD: "pixelbot856978",
     DBCONNECTION: "mongodb://localhost:27017/PixelBot"
 }
-
-// mcU9Ihq6erDEDQKd

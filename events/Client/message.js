@@ -1,6 +1,5 @@
 const { Collection, MessageEmbed } = require('discord.js');
 const { hasPermission } = require('../../tools/permissions.js');
-const { getRndInteger } = require('../../tools/random.js');
 
 module.exports = async (client, message) => {
     if (message.author.bot || message.channel.type == "dm") return;

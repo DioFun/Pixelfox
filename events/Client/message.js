@@ -29,7 +29,7 @@ module.exports = async (client, message) => {
     const commandName = args.shift().toLowerCase();
 
     const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.help.aliases && cmd.help.aliases.includes(commandName));
-    if (!command) return;
+    if (!command) return client.emit("xpSystem", message);
 
     // -> Permissions checking
     if (command.help.permission) {

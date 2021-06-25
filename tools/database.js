@@ -2,6 +2,9 @@ const mongoose = require("mongoose");
 const { Guild } = require("../models/index.js");
 
 module.exports = client => {
+
+    // -> Guilds' Functions
+
     client.createGuild = async guild => {
         const merged = {
             _id: mongoose.Types.ObjectId(),
@@ -27,20 +30,14 @@ module.exports = client => {
         return data.updateOne(settings);
     }
 
+    // -> Members' Functions
+
     client.createMember = async (member, guild) => {
-        const merged = {
-            userID: member.id,
-            username: member.user.username,
-            birthdate: "",
-            infractions: [],
-            experience: 0,
-            messages: 0,
-            level: 1
-        }
+        const newMember = new Member(member.id, member.user.username);
 
         await Guild.updateOne(
             {guildID: guild.id},
-            {$push : { members: merged}}
+            {$push : { members: newMember}}
         );
     }
 
@@ -72,6 +69,8 @@ module.exports = client => {
         return guildData;
     }
 
+    // -> Infractions' Functions
+
     client.addInfraction = async (member, guild, type, reason, date = Date.now(), isActive = true, end = new Date().setTime(0)) => {
         const infraction = {
             type: type,
@@ -85,3 +84,14 @@ module.exports = client => {
         await client.updateMember(member, guild, data).then(e => {return e});
     }
 };
+
+
+function Member(userid, username) {
+    this.userID =  userid;
+    this.username = username;
+    this.birthdate = "";
+    this.infractions = [];
+    this.experience = 0;
+    this.messages = 0;
+    this.level = 0;
+}

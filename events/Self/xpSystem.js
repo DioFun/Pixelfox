@@ -32,7 +32,6 @@ module.exports = async (client, message, guild) => {
     client.experience.get(message.guild.id).set(message.member.id, client.experience.get(message.guild.id).get(message.member.id) + 1);
     setTimeout(() => {
         client.experience.get(message.guild.id).set(message.member.id, client.experience.get(message.guild.id).get(message.member.id) - 1);
-        console.log(client.experience.get(message.guild.id).get(message.member.id));
     }, 60000);
 
     // TODO Vérifier passage de level ainsi que grades via fonctions globales

@@ -10,7 +10,7 @@ const { loadConfig, loadCommands, loadEvents, loadCrons } = require("./tools/loa
 const client = new Client();
 require("./tools/database")(client);
 require("./tools/xpSystem")(client);
-["commands", "cooldowns", "tasks"].forEach(x => client[x] = new Collection());
+["commands", "cooldowns", "tasks", "experience"].forEach(x => client[x] = new Collection());
 // * End of Requirements
 
 // * Bot Starting

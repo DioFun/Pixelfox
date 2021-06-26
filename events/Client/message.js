@@ -23,13 +23,13 @@ module.exports = async (client, message) => {
     let guild = await client.getGuild(message.guild);
 
 
-    if (!message.content.toLowerCase().startsWith(guild.settings.prefix)) return;
+    if (!message.content.toLowerCase().startsWith(guild.settings.prefix)) return client.emit("xpSystem", message, guild);
     if (!hasPermission(client, message.member, "member")) return message.channel.send(':x: Vous devez accepter le réglement avant de pouvoir utiliser les commandes !');
     const args = message.content.slice(guild.settings.prefix.length).split(/ +/);
     const commandName = args.shift().toLowerCase();
 
     const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.help.aliases && cmd.help.aliases.includes(commandName));
-    if (!command) return client.emit("xpSystem", message);
+    if (!command);
 
     // -> Permissions checking
     if (command.help.permission) {

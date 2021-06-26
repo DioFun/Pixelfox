@@ -19,6 +19,15 @@ const permissionsSchema = mongoose.Schema({
     }
 });
 
+const experienceSchema = mongoose.Schema({
+    xpMin: {"type": Number, "default": 15},
+    xpMax: {"type": Number, "default": 25},
+    maxUses: {"type": Number, "default": 1},
+    channelMultiplier: {"type": Array, "default": []},
+    ranks: {"type": Array, "default": []},
+    
+})
+
 const settingSchema = mongoose.Schema({
     prefix: {"type": String, "default": "!"},
     logChannel: {"type": String, "default": ""},
@@ -30,7 +39,8 @@ const settingSchema = mongoose.Schema({
     welcomeMessages: {"type": Array, "default": ["Hey ! Bienvenue <user> !"]},
     birthdayMessage: {"type": String, "default": ""},
     cronState: {"type": Boolean, "default": false},
-    crons: {"type": Array, "default": []}
+    crons: {"type": Array, "default": []},
+    experience: {"type": experienceSchema, "default": {}}
 });
 
 const guildSchema = mongoose.Schema({

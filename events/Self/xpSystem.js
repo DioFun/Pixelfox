@@ -27,6 +27,7 @@ module.exports = async (client, message, guild) => {
     let member = message.member;
     let data = await client.getMember(member, message.guild);
     data.experience += gain;
+    data.messages += 1;
     await client.updateMember(member, message.guild, data);
     client.experience.get(message.guild.id).set(message.member.id, client.experience.get(message.guild.id).get(message.member.id) + 1);
     setTimeout(() => {

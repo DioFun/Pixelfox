@@ -23,6 +23,7 @@ const experienceSchema = mongoose.Schema({
     xpMin: {"type": Number, "default": 15},
     xpMax: {"type": Number, "default": 25},
     maxUses: {"type": Number, "default": 1},
+    levelUpMessage: {"type": String, "default": "Bravo à {user} qui passe au niveau {level}"},
     channelMultiplier: {"type": Array, "default": []},
     ranks: {"type": Array, "default": []},
     
@@ -36,7 +37,7 @@ const settingSchema = mongoose.Schema({
     muteRoleID: {"type": String, "default": ""},
     permissions: {"type": permissionsSchema, "default": {}},
     cooldown: {"type": Number, "default": 5},
-    welcomeMessages: {"type": Array, "default": ["Hey ! Bienvenue <user> !"]},
+    welcomeMessages: {"type": Array, "default": ["Hey ! Bienvenue {user} !"]},
     birthdayMessage: {"type": String, "default": ""},
     cronState: {"type": Boolean, "default": false},
     crons: {"type": Array, "default": []},

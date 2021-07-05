@@ -17,6 +17,20 @@ module.exports.run = (client, message, args, guild) => {
                     client.updateGuild(message.guild, guild);
                     return message.channel.send(`:white_check_mark: Le message d'anniversaire actuel est désormais: \`\`\` ${newMessage} \`\`\``);
             }
+
+        case 'experience':
+            switch (args.shift().toLowerCase()) {
+                case 'view':
+                    if (!guild.settings.experience.levelUpMessage) return message.channel.send(":x: Il n'y a pas de message d'expérience défini !");
+                    return message.channel.send(`Le message d'expérience actuel est: \`\`\` ${guild.settings.experience.levelUpMessage} \`\`\` \nPlaceholders:\n> {user}: utilisateur qui augmente de niveau\n> {level}: nouveau niveau du membre`);
+
+                case 'set':
+                    let newMessage = args.join(" ");
+                    if (!newMessage) return message.channel.send(`:x: Vous n'avez pas renségné de message ! Utilisation de la commande : \`${guild.settings.prefix}${this.help.name} ${this.help.usage}\``);
+                    guild.settings.experience.levelUpMessage = newMessage;
+                    client.updateGuild(message.guild, guild);
+                    return message.channel.send(`:white_check_mark: Le message d'expérience actuel est désormais: \`\`\` ${newMessage} \`\`\``);
+            }
     
         case 'welcome':
             switch (args.shift().toLowerCase()) {
@@ -63,7 +77,7 @@ module.exports.help = {
     category : 'paramètres',
     description: "Permet de changer les messages de bienvenues et le message d'anniversaire",
     cooldown: 0,
-    usage: "<birthday,welcome> <display,birthday:[set],welcome:[add,remove]> <valeur>",
+    usage: "<birthday,experience,welcome> <display,birthday/experience:[set],welcome:[add,remove]> <valeur>",
     args: true,
     permission: "staff",
 };

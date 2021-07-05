@@ -4,6 +4,9 @@ const { getRndInteger } = require('../../tools/random.js');
 
 module.exports = async (client, member) => {
 
+
+    if(member.user.bot) return;
+    
     // -> Check BDD && Check Ban
     let data = await client.getMember(member, member.guild);
     if (!data){        
@@ -20,9 +23,7 @@ module.exports = async (client, member) => {
             }
         }
     }
-
-    if(member.user.bot) return;
-
+    client.levelCheck(member);
     let guildData = await client.getGuild(member.guild);
     let rdm = getRndInteger(0, guildData.settings.welcomeMessages.length);
     

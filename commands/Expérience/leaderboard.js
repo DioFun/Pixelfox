@@ -2,29 +2,28 @@ const { MessageEmbed } = require("discord.js");
 
 module.exports.run = async (client, message, args, guild) => {
     let leaderboard = guild.members.sort((a, b) => {
-        if (b.level !== a.level) {
-              return b.level - a.level
-        } else {
-            return b.experience - a.experience
-        }
+        if (b.level !== a.level) return b.level - a.level;
+        else return b.experience - a.experience;
     });
     let pages = Math.ceil(leaderboard.length / 10);
     let pagesContent = [];
     let elements = leaderboard;
-    let ranking = 1;
     for (let i = 0; i < pages; i++) {
         pagesContent[i] = "";
         for (let index = 0; index < 10; index++) {
-            let e = elements.shift();
-            if (e) pagesContent[i] += `${ranking}. <@${e.userID}> | Lvl. ${e.level} - ${e.experience} points\n`;
-            ranking++;
+            let e = elements.shift(); let begin; let end;
+            if (!e) continue;
+            if (i === 0 && index === 0) {begin = `**`; end = "** :first_place:";}
+            else if (i === 0 && index === 1) {begin = `**`; end = "** :second_place:";}
+            else if (i === 0 && index === 2) {begin = `**`; end = "** :third_place:";};
+            pagesContent[i] += `${begin ? begin : ""}${(i+1)*(index+1)}. <@${e.userID}> | Lvl. ${e.level} - ${e.experience} points${end ? end : ""}\n`;
         };                
     };
     let embedDisplay = new MessageEmbed()
         .setColor("ORANGE")
-        .setTitle(`🎖️ Classement XP 🎖️`)
+        .setTitle(`<:leaderboard:862060921719488512> Classement XP <:leaderboard:862060921719488512>`)
         .setDescription(pagesContent[0])
-        .setFooter(`Page 1/${pages}`);
+        .setFooter(`Page 1/${pages} - demandé par ${message.member.nickname ? message.member.nickname : message.member.user.username}`);
     if (pages > 1){
         let actual = 0;
         await message.channel.send(embedDisplay).then(m => {
@@ -35,7 +34,7 @@ module.exports.run = async (client, message, args, guild) => {
                 if (r.emoji.name === "➡️") actual = actual+1;
                 else actual = actual-1;
                 if (actual < 0 || actual > pages-1) return;
-                embedDisplay.setTitle(`🎖️ Classement XP 🎖️`);
+                embedDisplay.setTitle(`<:leaderboard:862060921719488512> Classement XP <:leaderboard:862060921719488512>`);
                 embedDisplay.setDescription(pagesContent[actual]);
                 embedDisplay.setFooter(`Page ${actual+1}/${pages}`);
                 m.edit(embedDisplay);

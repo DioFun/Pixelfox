@@ -16,14 +16,15 @@ module.exports.run = async (client, message, args, guild) => {
         pagesContent[i] = "";
         for (let index = 0; index < 10; index++) {
             let e = elements.shift();
-            if (e) pagesContent[i] += `${ranking}. <@${e.userID}> -> ${e.level} \n`;
+            if (e) pagesContent[i] += `${ranking}. <@${e.userID}> | Lvl. ${e.level} - ${e.experience} points\n`;
             ranking++;
         };                
     };
     let embedDisplay = new MessageEmbed()
         .setColor("ORANGE")
-        .setTitle(`Classement - Page 1/${pages}`)
-        .setDescription(pagesContent[0]);
+        .setTitle(`🎖️ Classement XP 🎖️`)
+        .setDescription(pagesContent[0])
+        .setFooter(`Page 1/${pages}`);
     if (pages > 1){
         let actual = 0;
         await message.channel.send(embedDisplay).then(m => {
@@ -34,8 +35,9 @@ module.exports.run = async (client, message, args, guild) => {
                 if (r.emoji.name === "➡️") actual = actual+1;
                 else actual = actual-1;
                 if (actual < 0 || actual > pages-1) return;
-                embedDisplay.setTitle(`Classement - Page ${actual+1}/${pages}`);
+                embedDisplay.setTitle(`🎖️ Classement XP 🎖️`);
                 embedDisplay.setDescription(pagesContent[actual]);
+                embedDisplay.setFooter(`Page ${actual+1}/${pages}`);
                 m.edit(embedDisplay);
             });
         });

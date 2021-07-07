@@ -19,16 +19,16 @@ module.exports = client => {
         const data = await Guild.findOne({ guildID: guild.id });
         if (data) return data;
         return false;
-    }
+    };
 
     client.updateGuild = async (guild, settings) => {
         let data = await client.getGuild(guild);
         if (typeof data !== "object") data = {};
         for (const key in settings) {
             if (data[key] !== settings[key]) data[key] = settings[key];
-        }
+        };
         return data.updateOne(settings);
-    }
+    };
 
     // -> Members' Functions
 
@@ -39,7 +39,7 @@ module.exports = client => {
             {guildID: guild.id},
             {$push : { members: newMember}}
         );
-    }
+    };
 
     client.getMember = async (member, guild) => {
         if (!member.id) member.id = member.userID;
@@ -47,27 +47,27 @@ module.exports = client => {
         let memberData = data.members.find(e => e.userID === member.id);
         if (memberData) return memberData;
         return false;
-    }
+    };
 
     client.getMemberByUsername = async (username, guild) => {
         let data = await client.getGuild(guild);
         let memberData = data.members.find(e => e.username.toLowerCase() === username.toLowerCase());
         if (memberData) return memberData;
         return false;
-    }
+    };
 
     client.updateMember = async (member, guild, settings) => {
         let data = await client.getMember(member, guild);
         if (typeof data !== "object") data = {};
         for (const key in settings) {
             if (data[key] !== settings[key]) data[key] = settings[key];
-        }
+        };
         let guildData = await client.getGuild(guild);
         let position = guildData.members.map(e => e.userID).indexOf(member.id);
         guildData.members[position] = data;
         await client.updateGuild(guild, guildData);
         return guildData;
-    }
+    };
 
     // -> Infractions' Functions
 
@@ -81,17 +81,19 @@ module.exports = client => {
         };
         let data = await client.getMember(member, guild);
         data.infractions.push(infraction);
-        await client.updateMember(member, guild, data).then(e => {return e});
-    }
+        await client.updateMember(member, guild, data).then(e => {return e;});
+    };
 };
 
 
-function Member(userid, username) {
-    this.userID =  userid;
-    this.username = username;
-    this.birthdate = "";
-    this.infractions = [];
-    this.experience = 0;
-    this.messages = 0;
-    this.level = 0;
-}
+class Member {
+    constructor(userid, username) {
+        this.userID = userid;
+        this.username = username;
+        this.birthdate = "";
+        this.infractions = [];
+        this.experience = 0;
+        this.messages = 0;
+        this.level = 0;
+    };
+};

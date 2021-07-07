@@ -10,12 +10,12 @@ module.exports = client => {
             let newRank = ranks[0] || undefined;
             if (!member.roles.cache.find(e => e.id === newRank?.id) || newRank === undefined) {
                 guild.settings.experience?.ranks?.forEach(e => {
-                    let role = member.roles.cache.find(role => role.id === e.id) || undefined
+                    let role = member.roles.cache.find(role => role.id === e.id) || undefined;
                     if (role) member.roles.remove(role);
                 });
                 if (newRank !== undefined) member.roles.add(newRank.id);
             };
-        } 
+        };
         await client.updateMember(member, member.guild, data);
         if (formerLevel !== data.level) return {message: guild.settings?.experience?.levelUpMessage?.replace(/{user}/g, member).replace(/{level}/g, data.level)};
         return;
@@ -37,7 +37,7 @@ module.exports = client => {
                     });
                     if (newRank !== undefined) guildMember.roles.add(newRank.id);
                 };
-            } 
+            }; 
         });
-    }
+    };
 };

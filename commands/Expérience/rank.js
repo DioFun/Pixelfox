@@ -13,7 +13,7 @@ module.exports.run = async (client, message, args, guild) => {
     let data = await client.getMember(member, member.guild);
     let embed = new MessageEmbed()
         .setColor("ORANGE")
-        .setTitle(`${rank} ${member.nickname ? member.nickname : member.user.username}`)
+        .setTitle(`${rank} ${member.displayName}`)
         .addField(`Niveau`, data.level, true)
         .addField(`Points d'expérience`, data.experience, true)
         .addField(`Nombre de messages`, data.messages, true)

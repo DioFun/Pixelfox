@@ -11,7 +11,7 @@ module.exports = async (client, message, guild) => {
     };
 
     // -> Attribution d'xp
-    let multiplier = guild.settings.experience?.channelMultiplier?.find(e => e.id === message.channel.id)?.value || 1
+    let multiplier = guild.settings.experience?.channelMultiplier?.find(e => e.id === message.channel.id)?.value || 1;
     let gain = Math.ceil(getRndInteger(guild.settings.experience?.xpMin || 15, guild.settings.experience?.xpMax || 25) * multiplier);
     let member = message.member;
     let data = await client.getMember(member, message.guild);
@@ -26,4 +26,4 @@ module.exports = async (client, message, guild) => {
     // -> Vérification passage level + grades
     let levelCheck = await client.levelCheck(message.member);
     if(levelCheck?.message) message.channel.send(levelCheck.message); 
-}
+};

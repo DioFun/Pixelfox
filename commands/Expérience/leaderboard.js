@@ -23,7 +23,7 @@ module.exports.run = async (client, message, args, guild) => {
         .setColor("ORANGE")
         .setTitle(`<:leaderboard:862060921719488512> Classement XP <:leaderboard:862060921719488512>`)
         .setDescription(pagesContent[0])
-        .setFooter(`Page 1/${pages} - demandé par ${message.member.nickname ? message.member.nickname : message.member.user.username}`);
+        .setFooter(`Page 1/${pages} - demandé par ${message.member.displayName}`);
     if (pages > 1){
         let actual = 0;
         await message.channel.send(embedDisplay).then(m => {

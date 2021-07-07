@@ -33,7 +33,7 @@ module.exports.run = async (client, message, args, guild) => {
                     .setTitle("Multiplicateurs d'expérience des salons")
                     .setDescription(guild.settings.experience.channelMultiplier.map(e => `<#${e.id}> <:red_arrow:861661373838131200> ${e.value}`));
                 return message.channel.send(embed);
-            }
+            };
         
         case "add":
             var member = message.mentions.members.first() || message.guild.members.cache.find(e => e.id === args[0] || e.user.username.toLowerCase() === args[0].toLowerCase() || e.displayName.toLowerCase().includes(args[0].toLowerCase())) || undefined;

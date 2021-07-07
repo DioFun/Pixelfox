@@ -108,3 +108,5 @@ Lavalink.jar
 lavalink.sh
 application.yml
 settings/config.js
+settings/permissions.json
+settings/settings.json

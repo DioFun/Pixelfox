@@ -2,44 +2,36 @@ const { MessageEmbed } = require('discord.js');
 
 module.exports.run = (client, message, args) => {
     message.delete();
-    args = args.join(" ").split('"');
-    if (args.length > 55) return message.channel.send(`:x: Il n'y a trop de réponses possible pour créer un sondage !\nUtilisation de la commande \`${client.settings.prefix}${this.help.name} ${this.help.usage}\``);
-    if (args.length < 7 && args.length > 3) return message.channel.send(`:x: Il n'y a pas assez d'arguments pour créer un sondage !\nUtilisation de la commande \`${client.settings.prefix}${this.help.name} ${this.help.usage}\``);
-
-    if (args.length === 3) {
-      args = args.concat([ "Oui", "", "Non", ""]);
-    }
-
-    let title = args.slice(1).shift();
-    args = args.slice(2);
-
+    args = args.join(" ").replace(/(?<=")\s(?=")/g, "").replace(/(?<=")"/g, "").match(/(?<=").+?(?=")/g); 
+    let title = args.shift();
+    if (!title) return message.channel.send(`:x: Vous n'avez pas spécifié de titre pour votre sondage !`);
+    if (args.length > 26) return message.channel.send(`:x: Il y a trop de réponses possible pour créer un sondage !`);
+    else if (args.length === 1) return message.channel.send(`:x: Vous n'avez spécifié qu'une seule réponse !`);
     let embed = new MessageEmbed()
         .setColor('ORANGE')
-        .setTitle(`:bar_chart: ${title}`)
-        .setFooter(`${message.author.username}`, message.author.avatarURL());
+        .setTitle(`:bar_chart: ${title}`);
+
+    if (args.length === 0) {
+        return message.channel.send(embed)
+            .then(m => {
+                m.react(`✅`);
+                m.react(`❌`);
+            });
+    }
 
     let reactions = ["🇦","🇧","🇨","🇩","🇪","🇫","🇬","🇭","🇮","🇯","🇰","🇱","🇲","🇳","🇴","🇵","🇶","🇷","🇸","🇹","🇺","🇻","🇼","🇽","🇾","🇿"]
-    let description = "Possibilités de réponse :\n";
-    let answerNbr = Math.floor((args.length)/2);
-    let i = 0;
+    let description = "";
 
-    while (i < answerNbr) {
-        const element = args.slice(1).shift();
-        description += `${reactions[i]} ${element}\n`;
-        args = args.slice(2);
-        i++;
-    };
+    for (let i = 0; i < args.length; i++) {
+        const e = args[i];
+        description += `${reactions[i]} ${e}\n`;    
+    }
 
-    embed.setDescription(description);
+    embed.setDescription(description).setFooter(`${message.author.username}`, message.author.avatarURL());
     message.channel.send(embed)
-      .then(message => {
-      let i = 0
-          while (i < answerNbr) {
-              message.react(reactions[i]);
-              i++;
-          };
-      });
-
+        .then(message => {
+            for (let i = 0; i < args.length; i++) message.react(reactions[i]);
+        });
 };
 
 module.exports.help = {

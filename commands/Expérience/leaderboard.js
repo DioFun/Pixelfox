@@ -4,7 +4,7 @@ module.exports.run = async (client, message, args, guild) => {
     let leaderboard = guild.members.sort((a, b) => {
         if (b.level !== a.level) return b.level - a.level;
         else return b.experience - a.experience;
-    });
+    }).filter(e => e.experience !== 0);
     let pages = Math.ceil(leaderboard.length / 10);
     let pagesContent = [];
     let elements = leaderboard;
@@ -16,7 +16,7 @@ module.exports.run = async (client, message, args, guild) => {
             if (i === 0 && index === 0) {begin = `**`; end = "** :first_place:";}
             else if (i === 0 && index === 1) {begin = `**`; end = "** :second_place:";}
             else if (i === 0 && index === 2) {begin = `**`; end = "** :third_place:";};
-            pagesContent[i] += `${begin ? begin : ""}${(i+1)*(index+1)}. <@${e.userID}> | Lvl. ${e.level} - ${e.experience} points${end ? end : ""}\n`;
+            pagesContent[i] += `${begin ? begin : ""}${i*10+(index+1)}. <@${e.userID}> | Lvl. ${e.level} - ${e.experience} points${end ? end : ""}\n`;
         };                
     };
     let embedDisplay = new MessageEmbed()

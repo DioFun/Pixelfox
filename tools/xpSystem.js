@@ -23,9 +23,11 @@ module.exports = client => {
 
     client.ranksUpdate = async (guild, formerRanks = undefined) => {
         let data = await client.getGuild(guild);
-        data.members.forEach(member => {
+        for (let i = 0; i < data.members.length; i++) {
+            data.members[i].level = Math.floor(0.21915*data.members[i].experience**0.43331);
+            const member = data.members[i];
             let guildMember = guild.members.cache.find(e => e.id === member.userID);
-            if (!guildMember) return;
+            if (!guildMember) continue;
             if (data.settings.experience?.ranks?.length !== 0){ 
                 let ranks = data.settings.experience?.ranks?.filter(e => e.level <= member.level).sort((a, b) => { return b.level - a.level; });
                 let newRank = ranks[0] || undefined;
@@ -37,7 +39,8 @@ module.exports = client => {
                     });
                     if (newRank !== undefined) guildMember.roles.add(newRank.id);
                 };
-            }; 
-        });
+            };
+        }
+        await client.updateGuild(guild, data);
     };
 };

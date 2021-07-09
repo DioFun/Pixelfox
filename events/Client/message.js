@@ -70,7 +70,10 @@ module.exports = async (client, message) => {
     };
     
     // -> Command execution
-    command.run(client, message, args, guild);
+    let display = command.run(client, message, args, guild);
+    if (display.send) {
+        
+    };
 };
 
 

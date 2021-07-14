@@ -1,9 +1,10 @@
 const { MessageEmbed } = require('discord.js');
 const { readdirSync } = require('graceful-fs');
+const { BackMessage } = require('../../class/BackMessage');
 
 const categoryList = readdirSync('./commands')
 
-module.exports.run = (client, message, args, guild) => {
+module.exports.run = async (client, message, args, guild) => {
     if (!args.length) {
         const embed = new MessageEmbed()
             .setColor('#f57c03')
@@ -18,10 +19,10 @@ module.exports.run = (client, message, args, guild) => {
             }
         };
 
-        return message.channel.send(embed);
+        return new BackMessage("custom", embed);
     } else {
         const command = client.commands.get(args[0]) || client.commands.find(cmd => cmd.help.aliases && cmd.help.aliases.includes(args[0]));
-        if(!command) return message.channel.send(":x: Impossible d'afficher de l'aide pour une commande non existante !");
+        if(!command) return new BackMessage("error", "Impossible d'afficher de l'aide pour une commande non existante !");
 
         const embed = new MessageEmbed()
             .setColor('#f57c03')
@@ -33,7 +34,7 @@ module.exports.run = (client, message, args, guild) => {
         if (command.help.cooldown || guild.settings.cooldown) embed.addField("Cooldown", `${command.help.cooldown ? command.help.cooldown : guild.settings.cooldown} secondes`, true)
         if (command.help.aliases.length > 1) embed.addField("Aliases", `${command.help.aliases.join(', ')}`, true);
 
-        return message.channel.send(embed)
+        return new BackMessage("custom", embed);
     }
 };
 

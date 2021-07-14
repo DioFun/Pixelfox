@@ -1,4 +1,5 @@
 const { MessageEmbed } = require("discord.js");
+const { BackMessage } = require("../../class/BackMessage");
 
 module.exports.run = async (client, message, args, guild) => {
     let member = message.mentions.members.first() || message.guild.members.cache.find(e => e.id === args[0] || e.user.username.toLowerCase() === args[0]?.toLowerCase() || e.displayName.toLowerCase().includes(args[0]?.toLowerCase())) || message.member;
@@ -18,7 +19,7 @@ module.exports.run = async (client, message, args, guild) => {
         .addField(`Points d'expérience`, data.experience, true)
         .addField(`Nombre de messages`, data.messages, true)
         .setThumbnail(member.user.avatarURL());
-    return message.channel.send(embed);
+    return new BackMessage("custom", embed);
 };
 
 module.exports.help = {

@@ -8,4 +8,4 @@ exports.DatabaseMember = class {
         this.messages = 0;
         this.level = 0;
     };
-}
+};

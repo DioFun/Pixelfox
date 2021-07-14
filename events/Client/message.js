@@ -70,10 +70,15 @@ module.exports = async (client, message) => {
     };
     
     // -> Command execution
-    let display = command.run(client, message, args, guild);
-    if (display.send) {
-        
-    };
+    await command.run(client, message, args, guild)
+        .then(backMessage => {
+            if (backMessage?.exist() && backMessage?.status === "error") client.cooldowns.get(command.help.name).delete(message.author.id);
+            if (backMessage?.exist()) return backMessage.send(message.channel, guild, command);
+        })
+        .catch(err => {
+            console.log(err)
+            done();
+        });
 };
 
 

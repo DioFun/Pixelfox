@@ -1,22 +1,22 @@
 const { MessageEmbed } = require('discord.js');
+const { BackMessage } = require('../../class/BackMessage');
 
-module.exports.run = (client, message, args) => {
+module.exports.run = async (client, message, args) => {
     message.delete();
     args = args.join(" ").replace(/(?<=")\s(?=")/g, "").replace(/(?<=")"/g, "").match(/(?<=").+?(?=")/g); 
     let title = args.shift();
-    if (!title) return message.channel.send(`:x: Vous n'avez pas spécifié de titre pour votre sondage !`);
-    if (args.length > 26) return message.channel.send(`:x: Il y a trop de réponses possible pour créer un sondage !`);
-    else if (args.length === 1) return message.channel.send(`:x: Vous n'avez spécifié qu'une seule réponse !`);
+    if (!title) return new BackMessage("error", `Vous n'avez pas spécifié de titre pour votre sondage !`);
+    if (args.length > 26) return new BackMessage("error", `Il y a trop de réponses possible pour créer un sondage !`);
+    else if (args.length === 1) return new BackMessage("error", `Vous n'avez spécifié qu'une seule réponse !`);
     let embed = new MessageEmbed()
         .setColor('ORANGE')
         .setTitle(`:bar_chart: ${title}`);
 
     if (args.length === 0) {
-        return message.channel.send(embed)
-            .then(m => {
-                m.react(`✅`);
-                m.react(`❌`);
-            });
+        return new BackMessage("custom", embed, m => {
+            m.react("✅");
+            m.react("❌");
+        });
     }
 
     let reactions = ["🇦","🇧","🇨","🇩","🇪","🇫","🇬","🇭","🇮","🇯","🇰","🇱","🇲","🇳","🇴","🇵","🇶","🇷","🇸","🇹","🇺","🇻","🇼","🇽","🇾","🇿"]

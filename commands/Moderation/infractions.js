@@ -1,21 +1,22 @@
 const { MessageEmbed } = require('discord.js');
+const { BackMessage } = require('../../class/BackMessage.js');
 const { TStoShortDate } = require('../../tools/date.js');
 const { hasPermission } = require('../../tools/permissions.js');
 
 module.exports.run = async (client, message, args) => {
 
     let member = (message.mentions.members.first() || message.guild.members.cache.find(e => e.user.username.toLowerCase() === args[0].toLowerCase()));
-    if(!member) return message.channel.send(":x: Vous n'avez pas spécifié d'utilisateur !");
+    if(!member) return new BackMessage("error", `Vous n'avez pas spécifié d'utilisateur !`);
     let memberData = await client.getMember(member, message.guild);
     const locker = memberData.infractions;
 
     if (args[1] && args[1].toLowerCase() === "clear" && hasPermission(client, message.member, "admin")) {
-        if (locker.length === 0) return message.channel.send(`:x: ${member} n'a aucune infraction !`);
+        if (locker.length === 0) return new BackMessage("error", `${member} n'a aucune infraction !`);
 
         memberData.infractions = [];
         await client.updateMember(member, message.guild, memberData);
 
-        return message.channel.send(`:white_check_mark: Les infractions de ${member} ont été supprimées !`);
+        return new BackMessage("success", `Les infractions de ${member} ont été supprimées !`);
 
     } else {
 
@@ -34,7 +35,7 @@ module.exports.run = async (client, message, args) => {
                 {name: `Dernières Infractions`, value: lastInfractions.length ? lastInfractions.map(e => `**${e.type}** : ${e.reason} - ${TStoShortDate(e.date)}`) : `Aucune infraction`}
             ])
 
-        return message.channel.send(embed);
+        return new BackMessage("custom", embed);
 
     }
     

@@ -1,6 +1,8 @@
+const { BackMessage } = require("../../class/BackMessage");
+
 module.exports.run = async (client, message, args) => {
     let number = Number.parseInt(args[0])+1;
-    if (number > 100) return message.channel.send(":x: Impossible de supprimer autant de messages !")
+    if (number > 100) return new BackMessage("error", `Impossible de supprimer autant de messages !`);
 
     try {
         message.channel.bulkDelete(number)
@@ -10,7 +12,7 @@ module.exports.run = async (client, message, args) => {
             });
     } catch (e) {
         console.log(e);
-        return message.channel.send(":x: Une erreur s'est produite !")
+        return new BackMessage("warning", `Une erreur s'est produite ! Merci de contacter <@287559092724301824> !`);
     }
 
     return;

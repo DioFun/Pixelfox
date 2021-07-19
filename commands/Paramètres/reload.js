@@ -1,7 +1,8 @@
+const { BackMessage } = require('../../class/BackMessage.js');
 const { saveFile } = require('../../tools/file.js');
 
-module.exports.run = async (client, message, args) => {
-    await message.channel.send(":white_check_mark: Redémmarage du bot en cours...");
+module.exports.run = async (client, message, args, guild) => {
+    await new BackMessage("success", `Redémarage du bot en cours...`).send(message.channel, guild, this);
     process.exit();
 };
 

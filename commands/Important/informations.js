@@ -24,7 +24,9 @@ module.exports.run = async (client, message, args) => {
 
         return new BackMessage("custom", embed);
 
-    }
+    } else if (message.mentions.members.first() && !hasPermission(client, message.member, "staff")) {
+        return new BackMessage("error", `Vous n'avez pas la permission d'effectuer cette action !`);
+    };
 
     switch(args[0].toLowerCase()){
         case 'vip':

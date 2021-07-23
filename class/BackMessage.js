@@ -19,19 +19,19 @@ exports.BackMessage = class {
         switch (this.type) {
             case "warning":
                 embed.setColor("YELLOW");
-                embed.setTitle(`⚠️ Un problème a été detecté ! ⚠️`);
-                description += `Une erreur anormale est survenue ! Merci de contacter le développeur !`;
+                embed.setTitle(`<:warn:866955793186553866> Un problème a été detecté ! <:warn:866955793186553866>`);
+                description += `Une erreur anormale est survenue ? Merci de contacter le développeur !`;
                 break;
 
             case "error":
                 embed.setColor("RED");
-                embed.setTitle(`:x: Commande invalide :x:`);
+                embed.setTitle(`<:prohibited:866955746754953237> Commande invalide <:prohibited:866955746754953237>`);
                 description += `Utilisation de la commande : \`${guild.settings.prefix}${command.help.name} ${command.help.usage}\``;
                 break;
         
             case "success": 
                 embed.setColor("GREEN");
-                embed.setTitle("<:greentick:863347899877687336> Commande effectuée <:greentick:863347899877687336>");
+                embed.setTitle("<:info:866955853160251411> Commande effectuée <:info:866955853160251411>");
                 break;
         }
         embed.setDescription(description);

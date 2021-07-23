@@ -1,3 +1,4 @@
+const { MessageEmbed } = require('discord.js');
 const { BackMessage } = require('../../class/BackMessage.js');
 const { hasPermission } = require('../../tools/permissions.js');
 
@@ -16,6 +17,18 @@ module.exports.run = async (client, message, args, guild) => {
     await client.updateMember(member, message.guild, data);
 
     member.roles.remove(message.channel.guild.roles.cache.get(guild.settings.muteRoleID));
+
+    let logChannel = message.guild.channels.cache.get(guild.settings.logChannel);
+    if (logChannel) {
+        let embed = new MessageEmbed()
+            .setColor(`GREEN`)
+            .setTitle(`<:info:866955853160251411> La réduction au silence d'un membre a été levée !`)
+            .setDescription(`${message.author} a autorisé ${member} à s'exprimer de nouveau sur le serveur !`)
+            .setFooter(`ID du membre : ${member.id}`)
+            .setTimestamp(Date.now());
+        if (reason) embed.addField(`Raison`, reason);
+        logChannel.send(embed);
+    };
 
     member.send(`Votre sanction de réduction au silence ${reason ? `pour ${reason} `: ``}a été levée !`);
     return new BackMessage("success", `La sanction de réduction au silence de ${member} ${reason ? `pour ${reason} `: ``}a été levée !`);

@@ -15,7 +15,7 @@ module.exports.run = async (client, message, args, guild) => {
         case 'welcome':
             guild.settings.welcomeChannel = channel.id;
             client.updateGuild(message.guild, guild);
-            return new BackMessage("success", `Le salon où les nouveaux membres seront accueillis est désormais ${channel} !`);
+            return new BackMessage("success", `Le salon où les nouveaux membres seront accueilli est désormais ${channel} !`);
     
         default:
             return new BackMessage("error", `Les arguments spécifiés sont invalides ou inexistants !`);

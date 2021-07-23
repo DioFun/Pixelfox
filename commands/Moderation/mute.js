@@ -1,4 +1,4 @@
-const { get } = require('mongoose');
+const { MessageEmbed } = require('discord.js');
 const { BackMessage } = require('../../class/BackMessage.js');
 const { StrToTime, TStoDate } = require('../../tools/date.js');
 const { hasPermission } = require('../../tools/permissions.js');
@@ -29,6 +29,18 @@ module.exports.run = async (client, message, args, guild) => {
 
     let backMessage = new BackMessage("success", `L'utilisateur \`${member.user.username}\` a été réduit au silence ${reason ? `pour \`${reason}\` ` : ""}jusqu'au ${TStoDate(time)} !`);
     backMessage.send(message.channel, guild, this);
+    let logChannel = message.guild.channels.cache.get(guild.settings.logChannel);
+    if (logChannel) {
+        let embed = new MessageEmbed()
+            .setColor(`BLUE`)
+            .setTitle(`:mute: Réduction au silence`)
+            .setDescription(`${message.author} a réduit au silence ${member.user.tag} !`)
+            .setFooter(`ID du membre : ${member.id}`)
+            .setTimestamp(Date.now());
+        if (reason) embed.addField(`Raison`, reason, true);
+        embed.addField(`Fin`, TStoDate(time), true);
+        logChannel.send(embed);
+    };
 
     setTimeout(async () => {
         data = await client.getMember(member, message.guild);

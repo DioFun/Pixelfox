@@ -41,7 +41,8 @@ const settingSchema = mongoose.Schema({
     birthdayMessage: {"type": String, "default": ""},
     cronState: {"type": Boolean, "default": false},
     crons: {"type": Array, "default": []},
-    experience: {"type": experienceSchema, "default": {}}
+    experience: {"type": experienceSchema, "default": {}},
+    latestMessageDeleted: {"type": Object, "default": {}}
 });
 
 const guildSchema = mongoose.Schema({

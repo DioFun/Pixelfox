@@ -12,7 +12,7 @@
     "discord.js": "^12.5.3",
     "erela.js": "^2.3.1",
     "graceful-fs": "^4.2.4",
-    "mongoose": "^5.12.7",
+    "mongoose": "^5.13.3",
     "node-cron": "^2.0.3",
     "picture_downloader_tool": "^1.0.1"
   }

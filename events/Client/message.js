@@ -39,7 +39,7 @@ module.exports = async (client, message) => {
     // -> Arguments checking
     if (command.help.args && !args.length) {
         let noArgsReply = new MessageEmbed()
-            .setTitle(":x: Commande Invalide :x:")
+            .setTitle("<:prohibited:866955746754953237> Commande Invalide <:prohibited:866955746754953237>")
             .setDescription(`Vous n'avez pas spécifié d'arguments ! \n Utilisation de la commande :\`${guild.settings.prefix}${commandName} ${command.help.usage}\` \n\n Pour plus d'informations sur la commande \`${guild.settings.prefix}aide ${command.help.name}\``)
             .setColor("RED");
         

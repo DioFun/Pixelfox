@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { DatabaseMember } = require("../class/DatabaseMember.js");
 const { Guild } = require("../models/index.js");
 
 module.exports = client => {
@@ -33,7 +34,7 @@ module.exports = client => {
     // -> Members' Functions
 
     client.createMember = async (member, guild) => {
-        const newMember = new Member(member.id, member.user.username);
+        const newMember = new DatabaseMember(member.id, member.user.username);
 
         await Guild.updateOne(
             {guildID: guild.id},
@@ -82,18 +83,5 @@ module.exports = client => {
         let data = await client.getMember(member, guild);
         data.infractions.push(infraction);
         await client.updateMember(member, guild, data).then(e => {return e;});
-    };
-};
-
-
-class Member {
-    constructor(userid, username) {
-        this.userID = userid;
-        this.username = username;
-        this.birthdate = "";
-        this.infractions = [];
-        this.experience = 0;
-        this.messages = 0;
-        this.level = 0;
     };
 };

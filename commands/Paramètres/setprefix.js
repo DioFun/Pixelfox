@@ -1,10 +1,12 @@
-module.exports.run = (client, message, args, guild) => {
-    let newprefix = args[0].toLowerCase();
-    if(!newprefix) return message.channel.send(':x: Vous n\'avez pas spécifié de préfixe !');
-    guild.settings.prefix = newprefix;
-    client.updateGuild(message.guild, guild);
+const { BackMessage } = require("../../class/BackMessage");
 
-    return message.channel.send(`:white_check_mark: Le préfixe du serveur a bien été changé pour \`${newprefix}\` `);
+module.exports.run = async (client, message, args, guild) => {
+    let newprefix = args[0].toLowerCase();
+    if(!newprefix) return new BackMessage("error", `Vous n'avez pas spécifié de préfixe !`);
+    guild.settings.prefix = newprefix;
+    await client.updateGuild(message.guild, guild);
+
+    return new BackMessage("success", `Le préfixe du serveur a bien été changé pour \`${newprefix}\` !`);
 };
 
 module.exports.help = {

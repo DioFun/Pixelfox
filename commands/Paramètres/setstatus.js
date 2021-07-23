@@ -1,13 +1,14 @@
+const { BackMessage } = require('../../class/BackMessage');
 const { saveFile } = require('../../tools/file');
 
-module.exports.run = (client, message, args) => {
+module.exports.run = async (client, message, args) => {
     let newactivity = args.join(' ');
     client.settings.status = newactivity;
     saveFile('settings.json', client.settings);
 
     client.user.setActivity(newactivity);
 
-    return message.channel.send(`:white_check_mark: Le statut du bot a bien été changé pour \`${newactivity}\``);
+    return new BackMessage("success", `Le statut du bot a bien été changé pour \`${newactivity}\` !`);
 };
 
 module.exports.help = {

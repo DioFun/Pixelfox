@@ -1,4 +1,5 @@
 const { MessageEmbed } = require("discord.js");
+const { BackMessage } = require("../../class/BackMessage");
 
 const ids = [
     {
@@ -111,7 +112,7 @@ module.exports.run = async (client, message, args, guild) => {
         if (!args[0]) member = message.member; 
         else member = message.mentions.members.first() || message.guild.members.cache.find(e => e.id === args[0] || e.user.username.toLowerCase() === args[0].toLowerCase() || e.displayName.toLowerCase().includes(args[0].toLowerCase()));
         let data = await client.getMember(member, member.guild);
-        if (!data || !data.profile) return message.channel.send(member === message.member ? `:x: Vous n'avez pas encore créé votre profil ! Pour le créer faites \`${guild.settings.prefix}${this.help.name} set\`` : `:x: ${member.displayName} n'a pas encore créé son profil !`);
+        if (!data || !data.profile) return new BackMessage("error", member === message.member ? `Vous n'avez pas encore créé votre profil ! Pour le créer faites \`${guild.settings.prefix}${this.help.name} set\`` : `${member.displayName} n'a pas encore créé son profil !`);
 
         let embed = new MessageEmbed()
             .setTitle(`Profil de ${member.displayName}`)
@@ -125,7 +126,7 @@ module.exports.run = async (client, message, args, guild) => {
             }
         }
 
-        return message.channel.send(embed);
+        return new BackMessage("custom", embed);
 
     }  else if (args[0].toLowerCase() === "set") {
         message.channel.send(`Un message privé vous a été envoyé afin de configurer votre profil !`)
@@ -140,7 +141,7 @@ module.exports.run = async (client, message, args, guild) => {
 
                 m.awaitReactions(filter, {max: 1, time: 30000})
                     .then(async collected => {
-                        if (collected.size === 0) return mess.channel.send(":x: Configuration de votre profil annulée !");
+                        if (collected.size === 0) return m.channel.send(":x: Configuration de votre profil annulée !");
                         let data = await client.getMember(message.member, message.guild);
                         let has;
                         let cancel = false;
@@ -216,7 +217,7 @@ module.exports.run = async (client, message, args, guild) => {
                                 const filter = (reaction, user) => (reaction.emoji.name === "✅" || reaction.emoji.name === "❌") && user.id == message.member.id;
                                 await m.awaitReactions(filter, {max: 1, time: 60000})
                                     .then(async collected => {
-                                        if (collected.size === 0) return message.channel.send(":x: Configuration de votre profil annulée !");
+                                        if (collected.size === 0) return m.channel.send(":x: Configuration de votre profil annulée !");
                                         if (collected.first().emoji.name === "❌") return m.channel.send("Les changements apportés n'ont pas été pris en compte !");
                                         await client.updateMember(message.member, message.guild, data);
                                         return m.channel.send(`:white_check_mark: Les changements apportés ont bien été pris en compte !`);
@@ -231,7 +232,7 @@ module.exports.run = async (client, message, args, guild) => {
         
 
     } else {
-        return message.channel.send(`:x: Mauvaise utilisation de la commande ! Utilisation : \`${guild.settings.prefix}${this.help.name} ${this.help.usage}\``);
+        return new BackMessage("error", `Mauvaise utilisation de la commande !`);
     }
 
 };

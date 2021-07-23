@@ -1,6 +1,7 @@
 const { TStoDate } = require('../../tools/date.js');
 const { MessageEmbed } = require('discord.js');
 const { hasPermission } = require('../../tools/permissions.js');
+const { BackMessage } = require('../../class/BackMessage.js');
 
 module.exports.run = async (client, message, args) => {
 
@@ -8,7 +9,7 @@ module.exports.run = async (client, message, args) => {
         const member = message.mentions.members.first();
         let memberData = await client.getMember(member, message.guild);
         const locker = memberData.infractions;
-        let embedmember = new MessageEmbed()
+        var embed = new MessageEmbed()
             .setTitle(`Informations concernant ${member.user.tag}`)
             .setColor("ORANGE")
             .addFields([
@@ -19,43 +20,45 @@ module.exports.run = async (client, message, args) => {
                 {name: "Arrivée", value: `A rejoint le serveur le ${TStoDate(member.joinedAt)}`, inline: true}
             ]);
 
-        if (member.premiumSince) embedmember.addField("Boost", `Boost le serveur depuis le ${TStoDate(member.premiumSince)}`);
+        if (member.premiumSince) embed.addField("Boost", `Boost le serveur depuis le ${TStoDate(member.premiumSince)}`);
 
-        return message.channel.send(embedmember);
+        return new BackMessage("custom", embed);
 
-    }
+    } else if (message.mentions.members.first() && !hasPermission(client, message.member, "staff")) {
+        return new BackMessage("error", `Vous n'avez pas la permission d'effectuer cette action !`);
+    };
 
     switch(args[0].toLowerCase()){
         case 'vip':
-            let embedvip = new MessageEmbed()
+            var embed = new MessageEmbed()
                 .setTitle('Informations sur le rôle VIP')
             .addField('Avantages :', "- Place plus haute dans la liste des membres\n- Possibilité d'enregistrer une conversation en utilisant !record et !stop-recording\n- Accès aux Blind Test en utilisant !start-quiz\n- Accès à la Tanière de PixelFox")
                 .addField('Obtention', '- Être ami avec un administrateur ou modérateur\n- Avoir fait partie du staff\n- Avoir atteint le niveau 25 sur le serveur')
                 .setColor('ORANGE');
 
-            return message.channel.send(embedvip);
+            return new BackMessage("custom", embed);
 
         case 'radio':
-            let embedradio = new MessageEmbed()
+            var embed = new MessageEmbed()
                 .setTitle('Informations sur la Radio de PixelFox')
                 .addField("Qu'est-ce que c'est ?", "La Radio PixelFox est la radio personnalisée du serveur et est accessible 24h/24, 7j/7. Sa particularité : tous les membres peuvent y contribuer en ajoutant des musiques, quels que soient les genres. \nElle est diffusée par "+ client.user.username +".\nPour l'écouter, il suffit de rejoindre le salon vocal \"Radio PixelFox\" !")
                 .addField('Comment contribuer au projet ?', "Pour ajouter des musiques à la Radio, il vous suffit de nous envoyer vos musiques ici : https://bit.ly/3f96uYi \nNote : il est possible que la Radio cesse de fonctionner de façon imprévue. Si cela arrive, merci de nous le dire dans #parler-au-staff !")
                 .setColor('ORANGE');
 
-            return message.channel.send(embedradio);
+            return new BackMessage("custom", embed);
 
         case 'boost':
-            let embedboost = new MessageEmbed()
+            var embed = new MessageEmbed()
                 .setTitle("Informations sur les avantages des Boosts du serveur")
                 .addField("Avantages", "- Toute notre gratitude <3\n- Tous les avantages Discord par défaut (icône à côté du pseudo, badge évolutif sur le profil, progression dans le niveau de Server Boost)\n- Rôle Fan n°1\n- Annonce de remerciement\n- Accès à la Tannière de PixelFox")
                 .addField("Durée des avantages", "Le boost s'interrompt après un mois si l'abonnement n'est plus effectif. \nLe rôle Fan n°1 sera donc perdu *(mais pas notre gratitude !)*\n\n\n*P.S. : Merci à ceux qui boostent et boosteront le serveur !*")
                 .setColor('ORANGE');
 
-            return message.channel.send(embedboost);
+            return new BackMessage("custom", embed);
 
         case 'serveur':
             const guild = message.guild;
-            let embedserveur = new MessageEmbed()
+            var embed = new MessageEmbed()
                 .setColor("ORANGE")
                 .setTitle(`Informations sur ${guild.name}`)
                 .addFields([
@@ -70,10 +73,10 @@ module.exports.run = async (client, message, args) => {
                 .setThumbnail(guild.iconURL())
                 .setFooter(`ID du serveur: ${guild.id}`);
 
-            return message.channel.send(embedserveur);
+            return new BackMessage("custom", embed);
 
         default:
-            return message.channel.send(`Les arguments spécifiés sont invalides ou inexistants. Utilisation de la commande : \`${client.settings.prefix}${this.help.name} ${this.help.usage}\``);
+            return new BackMessage("error", `Les arguments spécifiés sont invalides ou inexistants`);
     }
 };
 

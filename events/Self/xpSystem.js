@@ -2,6 +2,7 @@ const { Collection } = require("discord.js");
 const { getRndInteger } = require("../../tools/random");
 
 module.exports = async (client, message, guild) => {
+    if (!message.member?.id) return;
     // -> Vérification pour attribution d'xp
     if (client.experience.has(message.guild.id)){
         if (!client.experience.get(message.guild.id).has(message.member.id)) client.experience.get(message.guild.id).set(message.member.id, 0);
@@ -19,8 +20,9 @@ module.exports = async (client, message, guild) => {
     data.messages += 1;
     await client.updateMember(member, message.guild, data);
     client.experience.get(message.guild.id).set(message.member.id, client.experience.get(message.guild.id).get(message.member.id) + 1);
+    let id = message.member.id;
     setTimeout(() => {
-        client.experience.get(message.guild.id).set(message.member.id, client.experience.get(message.guild.id).get(message.member.id) - 1);
+        client.experience.get(guild.guildID).set(id, client.experience.get(guild.guildID).get(id) - 1);
     }, 60000);
 
     // -> Vérification passage level + grades

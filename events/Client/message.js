@@ -39,9 +39,9 @@ module.exports = async (client, message) => {
     // -> Arguments checking
     if (command.help.args && !args.length) {
         let noArgsReply = new MessageEmbed()
-            .setTitle(":x: Commande Invalide")
+            .setTitle("<:prohibited:866955746754953237> Commande Invalide <:prohibited:866955746754953237>")
             .setDescription(`Vous n'avez pas spécifié d'arguments ! \n Utilisation de la commande :\`${guild.settings.prefix}${commandName} ${command.help.usage}\` \n\n Pour plus d'informations sur la commande \`${guild.settings.prefix}aide ${command.help.name}\``)
-            .setColor("#f57c03");
+            .setColor("RED");
         
         return message.channel.send(noArgsReply);
     };
@@ -70,7 +70,16 @@ module.exports = async (client, message) => {
     };
     
     // -> Command execution
-    command.run(client, message, args, guild);
+    await command.run(client, message, args, guild)
+        .then(backMessage => {
+            if (backMessage?.exist() && backMessage?.status === "error") client.cooldowns.get(command.help.name).delete(message.author.id);
+            if (backMessage?.exist()) return backMessage.send(message.channel, guild, command).then(m => {
+                if (backMessage?.hasCallback()) backMessage.callback(m);
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        });
 };
 
 

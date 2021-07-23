@@ -1,14 +1,16 @@
-module.exports.run = (client, message, args, guild) => {
-    if (args.length < 2 || !message.mentions.roles.first()) return message.channel.send(`:x: Vous n'avez pas renségné assez d'arguments ! Utilisation de la commande : \`${client.settings.prefix}${this.help.name} ${this.help.usage}\``);
+const { BackMessage } = require("../../class/BackMessage");
+
+module.exports.run = async (client, message, args, guild) => {
+    if (args.length < 2 || !message.mentions.roles.first()) return new BackMessage("error", `Arguments Manquants !`);
     let role = message.mentions.roles.first();
     switch (args[0].toLowerCase()) {
         case 'mute':
             guild.settings.muteRoleID = role.id;
-            client.updateGuild(message.guild, guild);
-            return message.channel.send(`:white_check_mark: Le role de réduction au silence est désormais ${role} !`);
+            await client.updateGuild(message.guild, guild);
+            return new BackMessage("success", `Le role de réduction au silence est désormais ${role} !`);
     
         default:
-            return message.channel.send(`Les arguments spécifiés sont invalides ou inexistants. Utilisation de la commande : \`${client.settings.prefix}${this.help.name} ${this.help.usage}\``);
+            return new BackMessage("error", `Les arguments spécifiés sont invalides ou inexistants !`);
     }
 };
 

@@ -1,13 +1,15 @@
+const { MessageEmbed } = require('discord.js');
+const { BackMessage } = require('../../class/BackMessage.js');
 const { hasPermission } = require('../../tools/permissions.js');
 
 module.exports.run = async (client, message, args, guild) => {
 
     let member = (message.mentions.members.first() || message.guild.members.cache.find(e => e.user.username.toLowerCase() === args[0].toLowerCase()));
-    if(!member) return message.channel.send(":x: Vous n'avez pas spécifié d'utilisateur !");
-    if ((hasPermission(client, member, "staff") && !hasPermission(client, message.member, "admin")) || hasPermission(client, member, "admin")) return message.channel.send(":x: Vous n'avez pas la permission d'effectuer cette action sur cette utilisateur !");
+    if(!member) return new BackMessage("error", `Vous n'avez pas spécifié d'utilisateur !`);
+    if ((hasPermission(client, member, "staff") && !hasPermission(client, message.member, "admin")) || hasPermission(client, member, "admin")) return new BackMessage("error", `Vous n'avez pas la permission d'effectuer cette action sur cette utilisateur !`);
 
     let data = await client.getMember(member, message.guild);
-    if (!data.infractions.find(e => e.type === "mute" && e.isActive)) return message.channel.send(":x: Cet utilisateur n'est pas réduit au silence !");
+    if (!data.infractions.find(e => e.type === "mute" && e.isActive)) return new BackMessage("error", `Cet utilisateur n'est pas réduit au silence !`);
 
     let reason = data.infractions.find(inf => inf.isActive && inf.type === "mute").reason;
     
@@ -16,8 +18,20 @@ module.exports.run = async (client, message, args, guild) => {
 
     member.roles.remove(message.channel.guild.roles.cache.get(guild.settings.muteRoleID));
 
+    let logChannel = message.guild.channels.cache.get(guild.settings.logChannel);
+    if (logChannel) {
+        let embed = new MessageEmbed()
+            .setColor(`GREEN`)
+            .setTitle(`<:info:866955853160251411> La réduction au silence d'un membre a été levée !`)
+            .setDescription(`${message.author} a autorisé ${member} à s'exprimer de nouveau sur le serveur !`)
+            .setFooter(`ID du membre : ${member.id}`)
+            .setTimestamp(Date.now());
+        if (reason) embed.addField(`Raison`, reason);
+        logChannel.send(embed);
+    };
+
     member.send(`Votre sanction de réduction au silence ${reason ? `pour ${reason} `: ``}a été levée !`);
-    return message.channel.send(`:white_check_mark: La sanction de réduction au silence de ${member} ${reason ? `pour ${reason} `: ``}a été levée !`);
+    return new BackMessage("success", `La sanction de réduction au silence de ${member} ${reason ? `pour ${reason} `: ``}a été levée !`);
 
 };
 

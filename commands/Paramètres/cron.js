@@ -2,13 +2,14 @@ const { MessageEmbed, Collection} = require("discord.js");
 const cron = require("node-cron");
 const { downloadImage } = require("picture_downloader_tool");
 const fs = require("graceful-fs");
+const { BackMessage } = require("../../class/BackMessage");
 const display = ["", "jour", "semaine", "mois", "an"];
 
 module.exports.run = async (client, message, args, guild) => {
     switch (args.shift()) {
         case "add":
-            if (!args[0]) return message.channel.send(`:x: Mauvaise utilisation de la commande ! Ultilisation de la commande : \`${guild.settings.prefix}${this.help.name} ${this.help.usage}\``);
-            if (guild.settings.crons.find(e => e.name.toLowerCase() === args[0].toLowerCase())) return message.channel.send(`:x: Une tâche existante porte déjà ce nom (${args[0]})`);
+            if (!args[0]) return new BackMessage("error", `Arguments manquants !`);
+            if (guild.settings.crons.find(e => e.name.toLowerCase() === args[0].toLowerCase())) return new BackMessage("error", `Une tâche existante porte déjà ce nom (${args[0]}) !`);
             let newCron = {name: args[0]};
             let temp = {}; let filter;
             let embed = new MessageEmbed()
@@ -268,7 +269,7 @@ module.exports.run = async (client, message, args, guild) => {
                     break;
             }
             if (!newCron.when) return;
-            if (!cron.validate(newCron.when)) return console.log(`Une erreur est survenue !`);
+            if (!cron.validate(newCron.when)) return new BackMessage("warning", `Validation Cron Impossible !`);
 
             embed = new MessageEmbed()
                 .setColor("ORANGE")
@@ -331,12 +332,12 @@ module.exports.run = async (client, message, args, guild) => {
 
             client.tasks.get(message.guild.id).set(newCron.name, task);
             if (guild.settings.cronState) client.tasks.get(message.guild.id).get(newCron.name).start();
-            return message.channel.send(`:white_check_mark: Le message réccurents \`${newCron.name}\` a bien été enregistré !`);
+            return new BackMessage("success", `Le message réccurents \`${newCron.name}\` a bien été enregistré !`);
 
         case "edit":
-            if (!args[0]) return message.channel.send(`:x: Vous n'avez pas spécifié la tâche récurrente à supprimer !`);
+            if (!args[0]) return new BackMessage("error", `Vous n'avez pas spécifié la tâche récurrente à supprimer !`);
             let task3 = guild.settings.crons.find(e => e.name.toLowerCase() === args[0].toLowerCase());
-            if (!task3) return message.channel.send(`:x: Aucune tâche récurrente nommée \`${args[0]}\` n'a été trouvé !`);
+            if (!task3) return new BackMessage("error", `Aucune tâche récurrente nommée \`${args[0]}\` n'a été trouvé !`);
             let embedEdit = new MessageEmbed()
                 .setColor("ORANGE")
                 .setTitle(`Modification tâche récurrente \`${task3.name}\``)
@@ -397,21 +398,21 @@ module.exports.run = async (client, message, args, guild) => {
                         });
                 });
             if (!modified) return;
-            return message.channel.send(`:white_check_mark: Modification de ${task3.name} enregistrée !`); 
+            return new BackMessage("success", `Modification de ${task3.name} enregistrée !`); 
 
         case "remove":
-            if (!args[0]) return message.channel.send(`:x: Vous n'avez pas spécifié la tâche récurrente à supprimer !`);
+            if (!args[0]) return new BackMessage("error", `Vous n'avez pas spécifié la tâche récurrente à supprimer !`);
             let task2 = guild.settings.crons.find(e => e.name.toLowerCase() === args[0].toLowerCase());
-            if (!task2) return message.channel.send(`:x: Aucune tâche récurrente nommée \`${args[0]}\` n'a été trouvé !`);
+            if (!task2) return new BackMessage("error", `Aucune tâche récurrente nommée \`${args[0]}\` n'a été trouvé !`);
             guild.settings.crons.splice(guild.settings.crons.indexOf(task2), 1);
             await client.updateGuild(message.guild, guild);
             if (task2.attachment) fs.rm(`img/${task2.attachment}`, () => {});
             client.tasks.get(message.guild.id).get(task2.name).destroy();
             client.tasks.get(message.guild.id).delete(task2.name);
-            return message.channel.send(`:white_check_mark: La tâche récurrente \`${task2.name}\` a bien été supprimé !`);
+            return new BackMessage("success", `La tâche récurrente \`${task2.name}\` a bien été supprimé !`);
             
         case "display":
-            if (!guild.settings.crons.length) return message.channel.send(":x: Aucune tâches récurrentes n'a été créée !");
+            if (!guild.settings.crons.length) return new BackMessage("error", ` Aucune tâche récurrente existante !`);
             let pages = Math.ceil(guild.settings.crons.length / 4);
             let pagesContent = [];
             let elements = guild.settings.crons;
@@ -453,7 +454,7 @@ module.exports.run = async (client, message, args, guild) => {
             if (tasks.size > 0) {
                 tasks.forEach(task => task.start());
             };
-            return message.channel.send(`:white_check_mark: Les tâches récurrentes ont bien été activés !`);
+            return new BackMessage("success", `Les tâches récurrentes ont bien été activés !`);
 
         case "off":
             guild.settings.cronState = false;
@@ -462,7 +463,7 @@ module.exports.run = async (client, message, args, guild) => {
             if (Ctasks.size > 0) {
                 Ctasks.forEach(task => task.stop());
             };
-            return message.channel.send(`:white_check_mark: Les tâches récurrentes ont bien été désactivés !`);
+            return new BackMessage("success", `Les tâches récurrentes ont bien été désactivés !`);
 
         default:
             let noArgsReply = new MessageEmbed()
@@ -470,7 +471,7 @@ module.exports.run = async (client, message, args, guild) => {
             .setDescription(`Vous n'avez pas spécifié d'arguments ! \n Utilisation de la commande :\`${guild.settings.prefix}${this.help.name} ${this.help.usage}\` \n\n Pour plus d'informations sur la commande \`${guild.settings.prefix}aide ${this.help.name}\``)
             .setColor("#f57c03");
         
-            return message.channel.send(noArgsReply);
+            return new BackMessage("custom", noArgsReply);
     }
 
 

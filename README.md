@@ -4,8 +4,7 @@ Ceci est le dépôt du PixelBot actuellement nommé "Red Panda".
 
 ## Développement 
 
-Plusieurs fonctionnalités sont en cours de développement.
-* Système d'expérience par messages (Béta)
+Fonctionnalité.s en cours de développement:
 * Rework des permissions afin de passer en interserveur complet
 
 Développeurs:

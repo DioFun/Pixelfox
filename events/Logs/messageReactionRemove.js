@@ -1,5 +1,6 @@
 const { MessageEmbed } = require("discord.js");
 module.exports = async (client, reaction, user) => {
+    if (reaction.message.author.bot) return;
     if (!reaction.message.guild) return;
     let data = await client.getGuild(reaction.message.guild);
     if (!data || !data?.settings?.logChannel) return;

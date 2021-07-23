@@ -28,7 +28,7 @@ module.exports.run = async (client, message, args, guild) => {
         let actual = 0;
         await message.channel.send(embedDisplay).then(m => {
             m.react("⬅️"); m.react("➡️");
-            const collector = m.createReactionCollector((reaction, user) => (reaction.emoji.name === "➡️" || reaction.emoji.name === "⬅️") && !user.bot, {time: 600000});
+            const collector = m.createReactionCollector((reaction, user) => (reaction.emoji.name === "➡️" || reaction.emoji.name === "⬅️") && !user.bot && user.id === message.member.id, {time: 600000});
             collector.on('collect', (r, user) => {
                 r.users.remove(user);
                 if (r.emoji.name === "➡️") actual = actual+1;

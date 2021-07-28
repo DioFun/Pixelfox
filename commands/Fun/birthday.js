@@ -4,13 +4,13 @@ module.exports.run = async (client, message, args, guild) => {
     if (!args[0]) {
 
         let data = await client.getMember(message.member, message.guild);
-        return new BackMessage(data.birthdate ? "custom" : "error", data.birthdate ? `:tada: Votre date d'anniversaire est fixée au ${data.birthdate}.\nPour supprimer votre date d'anniversaire, utilisez la commande \`${guild.settings.prefix}${this.help.name} remove\`` : `Vous n'avez pas défini votre anniversaire.\nUtilisez \`${guild.settings.prefix}${this.help.name} set [JJ/MM/AAAA]\` pour définir votre date d'anniversaire.`);
+        return new BackMessage(data.birthdate ? "custom" : "error", data.birthdate ? `:tada: Votre date d'anniversaire est fixée au **${data.birthdate}**.\nPour supprimer votre date d'anniversaire, utilisez la commande \`${guild.settings.prefix}${this.help.name} remove\`` : `Vous n'avez pas défini votre anniversaire.\nUtilisez \`${guild.settings.prefix}${this.help.name} set [JJ/MM/AAAA]\` pour définir votre date d'anniversaire.`);
 
     } else if ((message.mentions.members.first() || message.guild.members.cache.find(e => (e.id === args[0] || e.user.username.toLowerCase() === args[0].toLowerCase() || e.displayName.toLowerCase().includes(args[0].toLowerCase())) && !e.user.bot)) && args[0].toLowerCase() !== "set" && args[0].toLowerCase() !== "remove") {
 
         let member = message.mentions.members.first() || message.guild.members.cache.find(e => e.id === args[0] || e.user.username.toLowerCase() === args[0].toLowerCase() || e.displayName.toLowerCase().includes(args[0].toLowerCase()));
         let data = await client.getMember(member, message.guild);
-        return new BackMessage(data.birthdate ? "custom" : "error", data.birthdate ? `:tada: La date d'anniversaire de ${member.displayName} est le ${data.birthdate}.` : `${member.displayName} n'a pas défini sa date d'anniversaire.`);
+        return new BackMessage(data.birthdate ? "custom" : "error", data.birthdate ? `:tada: La date d'anniversaire de ${member.displayName} est le **${data.birthdate}**.` : `${member.displayName} n'a pas défini sa date d'anniversaire.`);
 
     } else if (args[0].toLowerCase() === "set" && args[1]) {
         let birthday = args[1].split("/");

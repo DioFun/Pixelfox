@@ -12,7 +12,7 @@ const TStoDate = (TS, hour = true) => {
 const TStoShortDate = (TS, hour = true) => {
     let timestamp = new Date(TS);
 
-    let date = `${timestamp.getDate() < 10 ? "0" + timestamp.getDate() : timestamp.getDate()}/${timestamp.getMonth()+1 < 10 ? "0" + (timestamp.getMonth()+1) : (timestamp.getMonth()+1)}/${timestamp.getFullYear()} à ${timestamp.getHours() < 10 ? "0" + timestamp.getHours() : timestamp.getHours()}H${timestamp.getMinutes() < 10 ? "0" + timestamp.getMinutes() : timestamp.getMinutes()}`;
+    let date = `${timestamp.getDate() < 10 ? "0" + timestamp.getDate() : timestamp.getDate()}/${timestamp.getMonth()+1 < 10 ? "0" + (timestamp.getMonth()+1) : (timestamp.getMonth()+1)}/${timestamp.getFullYear()} ${hour ? `à ${timestamp.getHours() < 10 ? "0" + timestamp.getHours() : timestamp.getHours()}H${timestamp.getMinutes() < 10 ? "0" + timestamp.getMinutes() : timestamp.getMinutes()}` : ``}`;
 
     return date;
 }

@@ -38,3 +38,6 @@ module.exports = {
 ```javascript 
 {"status":"Skyrise est là"}
 ```
+
+## Licence
+Publié sous licence MIT

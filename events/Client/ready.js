@@ -6,6 +6,7 @@ module.exports = async client => {
     console.log(`Connected as ${client.user.tag}`);
     client.user.setActivity(`${client.settings.status}`);
 
+    /*
     // -> Radio Initialisation
     client.manager = new Manager({
         nodes: [
@@ -36,20 +37,21 @@ module.exports = async client => {
         });
 
     //client.manager.init(client.user.id);
+    client.on("raw", (d) => client.manager.updateVoiceState(d));
+    */
 
-    // ? Init mangoose
+    // -> Init mangoose
     await client.mongoose.init();
 
-    client.on("raw", (d) => client.manager.updateVoiceState(d));
-
-    //-> Update Bdd, Mute Check && Cron load
+    // -> Update Bdd, Mute Check && Cron load
     client.guilds.cache.forEach(async (guild) => {
         let guildData = await client.getGuild(guild)
         if (!guildData) {
             await client.createGuild(guild);
             guildData = await client.getGuild(guild);
         }
-        guild.members.cache.forEach(async (member) => {
+        let members = await guild.members.fetch();
+        members.forEach(async (member) => {
             if (!member.user.bot){
                 let data = await client.getMember(member, guild)
                 if(!data) {                    
@@ -100,6 +102,28 @@ module.exports = async client => {
         }
     });
 
-    
+    // -> Slash Commands
+    let slashCommands = require("../../slash_commands/settings");
+    client.guilds.cache.forEach(async guild => {
+        let commands = await guild.commands.fetch();
+        commands.forEach(command => {
+            if (!slashCommands.find(e => e.name === command.name)) guild.commands.delete(command.id);
+        });
+        for (let i = 0; i < slashCommands.length; i++) {
+            const slashCommand = slashCommands[i];
+            let command = commands.find(e => e.name === slashCommand.name)
+            if (command) command.edit(slashCommand);
+            else {
+                let newCommand = await guild.commands.create(slashCommand);
+                if (!slashCommand.defaultPermission) newCommand.permissions.add({
+                    permissions: [{
+                        id: guild.ownerId,
+                        type: "USER",
+                        permission: true
+                    }]
+                });
+            };            
+        };
+    });
 
-}
+};

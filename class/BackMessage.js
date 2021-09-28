@@ -15,7 +15,7 @@ exports.BackMessage = class {
         var description = `${this.message}\n\n`
         if (this.type === "custom") {
             return channel.send(this.message);
-        }
+        };
         switch (this.type) {
             case "warning":
                 embed.setColor("YELLOW");
@@ -33,13 +33,13 @@ exports.BackMessage = class {
                 embed.setColor("GREEN");
                 embed.setTitle("<:info:866955853160251411> Commande effectuée <:info:866955853160251411>");
                 break;
-        }
+        };
         embed.setDescription(description);
         embed.setFooter(`Pour plus d'informations sur la commande "${guild.settings.prefix}help ${command.help.name}"`);
-        return channel.send(embed);
+        return channel.send({ embeds: [embed] });
     };
     hasCallback() {
         if (this.callback) return true;
         return false;
-    }
+    };
 };

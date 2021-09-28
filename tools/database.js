@@ -44,6 +44,7 @@ module.exports = client => {
 
     client.getMember = async (member, guild) => {
         if (!member.id) member.id = member.userID;
+        if (!guild) guild = member.guild;
         let data = await client.getGuild(guild);
         let memberData = data.members.find(e => e.userID === member.id);
         if (memberData) return memberData;

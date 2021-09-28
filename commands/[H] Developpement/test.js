@@ -1,7 +1,7 @@
 const { BackMessage } = require("../../class/BackMessage");
 
-module.exports.run = async (client, message, args) => {
-    return new BackMessage("error", "Bien joué ceci est fonctionnel");
+module.exports.run = async (client, message, args, guild) => {
+
 };
 
 module.exports.help = {

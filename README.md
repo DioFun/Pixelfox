@@ -39,5 +39,10 @@ module.exports = {
 {"status":"Skyrise est là"}
 ```
 
-## Licence
-Publié sous licence MIT
+## License
+This repository is published under Creative Common License BY-NC-ND 4.0. (cf. LICENSE file)
+
+<hr>
+
+![LICENSE](https://img.shields.io/badge/License-CC%20BY--NC--ND-blue?style=for-the-badge
+)

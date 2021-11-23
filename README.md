@@ -1,6 +1,9 @@
 # Pixelbot dépôt
 
-Ceci est le dépôt du PixelBot actuellement nommé "Red Panda".
+Ceci est le dépôt du PixelBot actuellement nommé "Red Panda". 
+
+## Versions
+Currently Outdated.
 
 ## Développement 
 
